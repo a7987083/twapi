@@ -118,12 +118,15 @@ function API.Run(name,input)
   if not fn then return false,"函数当前不存在" end
   local args,err=ReadArgs(spec,input)
   if not args then return false,err end
-  local result={pcall(fn,unpack(args))}
-  local ok=table.remove(result,1)
+  -- Preserve nil fields and the exact number of Lua return values.
+  local function Pack(...) return {n=select("#",...),...} end
+  local values=Pack(pcall(fn,unpack(args)))
+  local ok=values[1]
   local pieces={}
-  for i=1,#result do pieces[#pieces+1]=Render(result[i]) end
-  -- Capture fixed common nil-result cases too; Lua table length may truncate trailing nils.
-  local output=ok and (#pieces>0 and table.concat(pieces,", ") or "(无返回值或 nil)") or tostring(result[1])
+  if ok then
+    for i=2,values.n do pieces[#pieces+1]=Render(values[i]) end
+  end
+  local output=ok and (#pieces>0 and table.concat(pieces,", ") or "(无返回值)") or tostring(values[2])
   API.DB.history=API.DB.history or {}
   table.insert(API.DB.history,1,{name=name,args=input,ok=ok,result=output,time=date("%Y-%m-%d %H:%M:%S")})
   while #API.DB.history>100 do table.remove(API.DB.history) end
