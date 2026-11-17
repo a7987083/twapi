@@ -130,7 +130,7 @@ function API.Run(name,input)
   return ok,output
 end
 function API.Scan()
-  local seen={}, list={}
+  local seen, list = {}, {}
   local function Add(name)
     if not seen[name] then seen[name]=true; list[#list+1]=name end
   end
