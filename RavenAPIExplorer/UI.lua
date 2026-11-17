@@ -153,24 +153,17 @@ end)
 SLASH_RAVENAPI1="/ravenapi"
 SLASH_RAVENAPI2="/ra"
 SlashCmdList.RAVENAPI=function()
-  if frame:IsShown() then frame:Hide() else
+  if frame:IsShown() then
+    frame:Hide()
+  else
     if not API.DB then API.Init() end
-    local version,build=GetBuildInfo()
-    version=version or "?"
-    version=version.." / Build "..(build or "?")
-    version=version.."  |  API: "..#(API.list or {})
-    local note=API.DB.lastScan and API.DB.lastScan.version or "?"
-    version=version.." | Scan "..note
-    _G.RavenAPIExplorerFrame:Show()
-    _G.RavenAPIExplorerFrame:SetFrameStrata("DIALOG")
-    version=version
-    _G.RavenAPIExplorerVersionText=nil
-    -- local FontString keeps version label distinct from its string contents.
-    _G.RavenAPIExplorer=nil
-    -- UI does not modify the actual addon state.
+    local ver,build=GetBuildInfo()
+    version:SetText("客户端 "..tostring(ver).."  Build "..tostring(build).."  |  API: "..#(API.list or {}))
     Filter()
+    frame:Show()
   end
 end
+
 local loader=CreateFrame("Frame")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:SetScript("OnEvent",function()
