@@ -1,0 +1,8 @@
+## Interface: 11402
+## Title: |cff55c9ffRavenCraft API Explorer|r
+## Notes: 中文 Lua API 浏览、只读测试与记录导出
+## Author: twapi
+## SavedVariables: RavenAPIExplorerDB
+
+Core.lua
+UI.lua
